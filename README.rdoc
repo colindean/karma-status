@@ -1,6 +1,6 @@
 = karma-status
 
-Description goes here.
+This gem provides a quick interface to some of Karma's dashboard features.
 
 == Contributing to karma-status
  
