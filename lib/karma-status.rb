@@ -36,16 +36,21 @@ class Karma::Hotspot::Status
   end
 
   def retrieve
-    response = ::RestClient.get STATUS_URL do |response, request, result, &block|
-      case response.code
-      when 200
-        Karma::LOGGER.info "success"
-        Karma::LOGGER.info response
-        response
-      else
-        response.return!(request, result, &block)
+    begin
+      response = ::RestClient.get STATUS_URL do |response, request, result, &block|
+        case response.code
+        when 200
+          Karma::LOGGER.info "success"
+          Karma::LOGGER.info response
+          response
+        else
+          response.return!(request, result, &block)
+        end
       end
+      ::JSON.parse response.to_str
+    rescue SocketError => e
+      Karma::LOGGER.error e.to_s
+      return {:error => e.message}
     end
-    ::JSON.parse response.to_str
   end
 end
